@@ -1,41 +1,58 @@
-    "env": {
-        "es2021": true,
-        "node": true
-    },
-    "extends": [
-        "airbnb-base"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module"
-    },
-    "plugins": [
-        "@typescript-eslint"
-    ],
-    "settings": {
-        "import/resolver": {
-            "node": {
-                "extensions": [
-                    ".ts",
-                    ".js",
-                    ".json"
-                ]
-            }
-        },
-        "import/extensions": [
-            ".js",
-            ".ts"
+{
+  "env": {
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "airbnb-base"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".ts",
+          ".js",
+          ".json"
         ]
+      }
     },
-    "rules": {
-        "import/extensions": [
-            "error",
-            "ignorePackages",
-            {
-                "js": "never",
-                "ts": "never"
-            }
-        ]
-    },
+    "import/extensions": [
+      ".js",
+      ".ts"
+    ]
+  },
+  "rules": {
+    "arrow-body-style": "off",
+    "arrow-parens": "off",
+    "consistent-return": "off",
+    "no-unused-vars": "off",
+    "no-underscore-dangle": "off",
+    "import/prefer-default-export": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "ts": "never"
+      }
+    ],
+    "indent": "off",
+    "padded-blocks": "off",
+    "no-multiple-empty-lines": "off",
+    "comma-dangle": "off",
+    "semi": "off",
+    "no-trailing-spaces": "off",
+    "eol-last": "off",
+    "import/order": "off",
+    "no-console": "off",
+    "linebreak-style": "off"
+  }
 }
