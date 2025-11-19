@@ -3,6 +3,7 @@ import {
     Schema,
     Types
 } from 'mongoose';
+import { urlRegex } from '../constants/url-regexp';
 
 type Card = {
     name: string;
@@ -21,7 +22,11 @@ const cardSchema = new Schema<Card>({
     },
     link: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+          validator: (link: string) => urlRegex.test(link),
+          message: 'Некорректный URL',
+        },
     },
     owner: {
         type: Schema.Types.ObjectId,
@@ -38,6 +43,6 @@ const cardSchema = new Schema<Card>({
         default: Date.now
     }
 
-})
+}, { versionKey: false })
 
 export default model<Card>('Card', cardSchema);

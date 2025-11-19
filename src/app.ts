@@ -1,28 +1,29 @@
-import express,
-{
-  Response,
-  NextFunction
-} from 'express';
+import express from 'express';
 import mongoose from 'mongoose';
 import usersRouter from './routes/users';
 import cardsRouter from './routes/cards';
-import { AuthRequest } from './types/auth-request';
+import validateRequest from './middlewares/validate';
+import { createUserSchema, loginUserSchema } from './validators/user';
+import { createUser, loginUser } from './controllers/users';
+import auth from './middlewares/auth';
+import { errorLogger, requestLogger } from './middlewares/logger';
+import errorHandler from './middlewares/errors';
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost/mestodb');
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
-app.use((req: AuthRequest, res: Response, next: NextFunction) => {
-  req.user = {
-    _id: '691cd96052c9d8cc1716097d'
-  };
+app.use(requestLogger);
+app.use(errorLogger);
 
-  next();
-});
+app.use(errorHandler);
 
+app.post('/signin', validateRequest(loginUserSchema), loginUser);
+app.post('/signup', validateRequest(createUserSchema), createUser);
+app.use(auth);
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter)
 

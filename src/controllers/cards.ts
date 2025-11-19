@@ -1,6 +1,7 @@
 import {
-    Request,
-    Response
+  NextFunction,
+  Request,
+  Response
 } from 'express';
 import Card from '../models/card'
 import { AuthRequest } from '../types/auth-request';
@@ -8,14 +9,13 @@ import { HttpStatus } from '../enums/http-status';
 import { ErrorMessage } from '../enums/error-message';
 import { MongoError } from '../enums/mongo-error';
 
-export const getCards = (req: Request, res: Response) => {
+export const getCards = (req: Request, res: Response, next: NextFunction) => {
     return Card.find({})
         .then(cards => res.status(HttpStatus.Ok).send({ data: cards }))
-        .catch(() => res.status(HttpStatus.InternalServerError)
-            .send({ message: ErrorMessage.InternalServerError }))
+        .catch(next)
 }
 
-export const postCard = (req: AuthRequest, res: Response) => {
+export const postCard = (req: AuthRequest, res: Response, next: NextFunction) => {
     const { name, link } = req.body;
     const owner = req.user?._id;
 
@@ -28,12 +28,11 @@ export const postCard = (req: AuthRequest, res: Response) => {
                 });
             }
 
-            res.status(HttpStatus.InternalServerError)
-              .send({ message: ErrorMessage.InternalServerError })
+            next(err);
         });
 }
 
-export const putCardsLikes = (req: AuthRequest, res: Response) => {
+export const putCardsLikes = (req: AuthRequest, res: Response, next: NextFunction) => {
     const { cardId } = req.params;
     const userId = req.user?._id;
 
@@ -53,12 +52,11 @@ export const putCardsLikes = (req: AuthRequest, res: Response) => {
                 return res.status(HttpStatus.BadRequest).send({ message: ErrorMessage.BadRequest })
             }
 
-            res.status(HttpStatus.InternalServerError)
-              .send({ message: ErrorMessage.InternalServerError })
+            next(err);
         })
 }
 
-export const deleteCard = (req: AuthRequest, res: Response) => {
+export const deleteCard = (req: AuthRequest, res: Response, next: NextFunction) => {
   const { cardId } = req.params;
   const userId = req.user?._id;
 
@@ -78,11 +76,12 @@ export const deleteCard = (req: AuthRequest, res: Response) => {
       if (err.name === MongoError.CastError) {
         return res.status(HttpStatus.BadRequest).send({ message: ErrorMessage.BadRequest })
       }
-      res.status(HttpStatus.InternalServerError).send({ message: ErrorMessage.InternalServerError })
+
+      next(err)
     })
 }
 
-export const deleteCardsLikes = (req: AuthRequest, res: Response) => {
+export const deleteCardsLikes = (req: AuthRequest, res: Response, next: NextFunction) => {
     const { cardId } = req.params;
     const userId = req.user?._id;
 
@@ -103,7 +102,6 @@ export const deleteCardsLikes = (req: AuthRequest, res: Response) => {
                 return res.status(HttpStatus.BadRequest).send({ message: ErrorMessage.BadRequest })
             }
 
-            res.status(HttpStatus.InternalServerError)
-              .send({ message: ErrorMessage.InternalServerError })
+            next(err)
         })
 }
