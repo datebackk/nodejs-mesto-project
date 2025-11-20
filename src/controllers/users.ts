@@ -11,6 +11,8 @@ import { MongoError } from '../enums/mongo-error';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+const { JWT_SECRET = 'secret' } = process.env
+
 export const createUser = (req: Request, res: Response, next: NextFunction) => {
   const {
     name, about, avatar, email
@@ -44,7 +46,7 @@ export const loginUser = (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then(user => {
-        const token = jwt.sign({ _id: user._id }, 'jwt-secret', { expiresIn: '7d' });
+        const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
 
         res.cookie('jwt', token, {
             httpOnly: true,

@@ -9,6 +9,8 @@ import jwt,
 } from 'jsonwebtoken';
 import { HttpStatus } from '../enums/http-status';
 
+const { JWT_SECRET = 'secret' } = process.env
+
 interface SessionRequest extends Request {
     user?: string | JwtPayload;
 }
@@ -34,7 +36,7 @@ export default (req: SessionRequest, res: Response, next: NextFunction) => {
   let payload;
 
   try {
-      payload = jwt.verify(token, 'super-strong-secret');
+      payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
       return handleAuthError(res);
   }
